@@ -1,6 +1,9 @@
 const express = require("express");
 const app = express();
 const cors = require("cors");
+const mongoose = require("mongoose");
+const password = require("./password");
+const colorLog = require("./utils/colorLog");
 
 app.use(cors());
 app.use(express.json());
@@ -78,4 +81,6 @@ app.use((_, response) => {
 
 const PORT = process.env.PORT || 3001;
 
-app.listen(PORT, () => console.log(`🔥 Server running on PORT ${PORT} 🔥`));
+app.listen(PORT, () =>
+  colorLog("success", `🔥 Server running on PORT ${PORT} 🔥`)
+);
