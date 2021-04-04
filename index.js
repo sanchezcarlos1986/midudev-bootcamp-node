@@ -1,30 +1,16 @@
 const express = require("express");
 const app = express();
 const cors = require("cors");
-const mongoose = require("mongoose");
-const password = require("./password");
 const colorLog = require("./utils/colorLog");
+
+require("./mongo");
+
+const Note = require("./models/Note");
 
 app.use(cors());
 app.use(express.json());
 
-let notes = [
-  {
-    id: 1,
-    content: "uno delectus aut autem",
-    important: false,
-  },
-  {
-    id: 2,
-    content: "dos delectus aut autem",
-    important: false,
-  },
-  {
-    id: 3,
-    content: "tres delectus aut autem",
-    important: false,
-  },
-];
+let notes = [];
 
 function getIdFromRequest(request) {
   return Number(request.params.id);
@@ -32,7 +18,10 @@ function getIdFromRequest(request) {
 
 app.get("/api", (_, response) => response.send("<h1>HOLA MUNDO</h1>"));
 
-app.get("/api/notes", (_, response) => response.json(notes));
+app.get("/api/notes", async (_, response) => {
+  const notes = await Note.find({});
+  response.json(notes);
+});
 
 app.get("/api/notes/:id", (request, response) => {
   const id = getIdFromRequest(request);
@@ -79,7 +68,7 @@ app.use((_, response) => {
   });
 });
 
-const PORT = process.env.PORT || 3001;
+const PORT = process.env.PORT;
 
 app.listen(PORT, () =>
   colorLog("success", `🔥 Server running on PORT ${PORT} 🔥`)
