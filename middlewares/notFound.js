@@ -4,4 +4,4 @@ const notFound = (request, response) => {
   });
 };
 
-module.exports = notFound;
+export default notFound;

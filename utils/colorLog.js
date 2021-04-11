@@ -13,4 +13,4 @@ const colorLog = (type, msg, ...rest) => {
   }
 };
 
-module.exports = colorLog;
+export default colorLog;

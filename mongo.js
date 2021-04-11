@@ -1,6 +1,6 @@
 require("dotenv").config();
-const mongoose = require("mongoose");
-const colorLog = require("./utils/colorLog");
+import mongoose from "mongoose";
+import colorLog from "./utils/colorLog";
 
 const connectionString = process.env.MONGO_DB_URI;
 

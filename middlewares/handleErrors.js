@@ -1,4 +1,4 @@
-const colorLog = require("../utils/colorLog");
+import colorLog from "../utils/colorLog";
 
 const handleErrors = (error, request, response, next) => {
   console.log("=====>:", error);
@@ -10,4 +10,4 @@ const handleErrors = (error, request, response, next) => {
   }
 };
 
-module.exports = handleErrors;
+export default handleErrors;
