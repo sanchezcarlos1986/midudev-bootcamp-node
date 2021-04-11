@@ -1,8 +1,8 @@
 import express from "express";
 import cors from "cors";
-import colorLog from "./utils/colorLog";
-import notFound from "./middlewares/notFound";
-import handleErrors from "./middlewares/handleErrors";
+import colorLog from "~utils/colorLog";
+import notFound from "~middlewares/notFound";
+import handleErrors from "~middlewares/handleErrors";
 import * as Sentry from "@sentry/node";
 import * as Tracing from "@sentry/tracing";
 
