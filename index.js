@@ -6,6 +6,10 @@ import handleErrors from "~middlewares/handleErrors";
 import * as Sentry from "@sentry/node";
 import * as Tracing from "@sentry/tracing";
 
+// Routers
+import notesRouter from "~controllers/notes";
+import usersRouter from "~controllers/users";
+
 const { NODE_ENV } = process.env;
 
 const app = express();
@@ -26,8 +30,8 @@ Sentry.init({
   tracesSampleRate: 1.0,
 });
 
+// Initialize Mongo Connection
 import "./mongo";
-import Note from "~models/Note";
 
 app.use(cors());
 app.use(express.json());
@@ -35,67 +39,11 @@ app.use(express.static("public"));
 
 app.get("/api", (_, response) => response.send("<h1>HOLA MUNDO</h1>"));
 
-app.get("/api/notes", async (_, response) => {
-  const notes = await Note.find({});
-  response.json(notes);
-});
+// NOTES ROUTER
+app.use("/api/notes", notesRouter);
 
-app.get("/api/notes/:id", (request, response, next) => {
-  const { id } = request.params;
-
-  Note.findById(id)
-    .then((note) => {
-      if (note) {
-        response.json(note);
-      } else {
-        response.status(404).end("Note not found");
-      }
-    })
-    .catch(next);
-  // this is like .catch(err => next(err))
-});
-
-app.post("/api/notes", async (request, response, next) => {
-  const note = request.body;
-
-  if (!note || !note.content) {
-    return response.status(400).json({
-      error: "note or note.content are missing",
-    });
-  }
-
-  const newNote = new Note({
-    date: new Date(),
-    important: note.important || false,
-    content: note.content,
-  });
-
-  try {
-    const savedNote = await newNote.save();
-    response.status(201).json(savedNote);
-  } catch (err) {
-    next(err);
-  }
-});
-
-app.put("/api/notes/:id", (request, response, next) => {
-  const { id } = request.params;
-  const note = request.body;
-
-  Note.findByIdAndUpdate(id, note)
-    .then((result) => response.status(200).end())
-    .catch(next);
-});
-
-app.delete("/api/notes/:id", async (request, response, next) => {
-  try {
-    const { id } = request.params;
-    await Note.findByIdAndRemove(id);
-    response.status(204).end();
-  } catch (err) {
-    next(err);
-  }
-});
+// USERS ROUTER
+app.use("/api/users", usersRouter);
 
 app.use(Sentry.Handlers.errorHandler());
 app.use(notFound);

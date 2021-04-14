@@ -1,12 +1,16 @@
 import { Schema, model } from "mongoose";
 
-const notesSchema = new Schema({
+const noteSchema = new Schema({
   content: String,
   date: Date,
   important: Boolean,
+  user: {
+    type: Schema.Types.ObjectId,
+    ref: "User",
+  },
 });
 
-notesSchema.set("toJSON", {
+noteSchema.set("toJSON", {
   transform: (document, returnedObject) => {
     returnedObject.id = returnedObject._id;
     delete returnedObject._id;
@@ -14,6 +18,6 @@ notesSchema.set("toJSON", {
   },
 });
 
-const Note = model("Note", notesSchema);
+const Note = model("Note", noteSchema);
 
 export default Note;
