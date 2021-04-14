@@ -9,7 +9,7 @@ const colorLog = (type, msg, ...rest) => {
     case "error":
       return console.log("\x1b[31m%s\x1b[0m", msg, rest);
     default:
-      return console.log(msg, rest);
+      return console.log("\x1b[36m%s\x1b[0m", msg, rest);
   }
 };
 
