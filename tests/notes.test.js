@@ -66,6 +66,25 @@ test("a valid new note can be added", async () => {
   expect(contents).toContain("new note about City Pop");
 });
 
+describe("DELETE notes", () => {
+  test("a valid note can be deleted", async () => {
+    const { response: firstResponse } = await getAllContentFromNotes();
+    const [noteToDelete] = firstResponse.body;
+    await api.delete(`/api/notes/${noteToDelete.id}`).expect(204);
+
+    const { contents, response } = await getAllContentFromNotes();
+    expect(response.body).toHaveLength(initialNotes.length - 1);
+    expect(contents).not.toContain(noteToDelete.content);
+  });
+
+  test("an invalid note can not be deleted", async () => {
+    await api.delete(`/api/notes/1234`).expect(400);
+
+    const { response } = await getAllContentFromNotes();
+    expect(response.body).toHaveLength(initialNotes.length);
+  });
+});
+
 afterAll(() => {
   mongoose.connection.close();
   server.close();

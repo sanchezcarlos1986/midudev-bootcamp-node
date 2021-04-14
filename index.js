@@ -55,7 +55,7 @@ app.get("/api/notes/:id", (request, response, next) => {
   // this is like .catch(err => next(err))
 });
 
-app.post("/api/notes", (request, response) => {
+app.post("/api/notes", async (request, response, next) => {
   const note = request.body;
 
   if (!note || !note.content) {
@@ -70,7 +70,12 @@ app.post("/api/notes", (request, response) => {
     content: note.content,
   });
 
-  newNote.save().then((savedNote) => response.status(201).json(savedNote));
+  try {
+    const savedNote = await newNote.save();
+    response.status(201).json(savedNote);
+  } catch (err) {
+    next(err);
+  }
 });
 
 app.put("/api/notes/:id", (request, response, next) => {
@@ -82,11 +87,14 @@ app.put("/api/notes/:id", (request, response, next) => {
     .catch(next);
 });
 
-app.delete("/api/notes/:id", (request, response, next) => {
-  const { id } = request.params;
-  Note.findByIdAndRemove(id)
-    .then((result) => response.status(204).end())
-    .catch(next);
+app.delete("/api/notes/:id", async (request, response, next) => {
+  try {
+    const { id } = request.params;
+    await Note.findByIdAndRemove(id);
+    response.status(204).end();
+  } catch (err) {
+    next(err);
+  }
 });
 
 app.use(Sentry.Handlers.errorHandler());
