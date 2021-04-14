@@ -6,6 +6,8 @@ import handleErrors from "~middlewares/handleErrors";
 import * as Sentry from "@sentry/node";
 import * as Tracing from "@sentry/tracing";
 
+const { NODE_ENV } = process.env;
+
 const app = express();
 
 Sentry.init({
@@ -25,7 +27,7 @@ Sentry.init({
 });
 
 import "./mongo";
-import Note from "./models/Note";
+import Note from "~models/Note";
 
 app.use(cors());
 app.use(express.json());
@@ -93,6 +95,10 @@ app.use(handleErrors);
 
 const PORT = process.env.PORT;
 
-app.listen(PORT, () =>
-  colorLog("info", `🔥 Node Server running on PORT ${PORT} 🔥`)
-);
+const server = app.listen(PORT, () => {
+  NODE_ENV === "development" &&
+    colorLog("info", `🔥 Node Server running on PORT ${PORT} 🔥`);
+});
+
+export { app, server };
+export default app;

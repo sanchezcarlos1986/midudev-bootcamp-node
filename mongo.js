@@ -16,5 +16,9 @@ const mongoConfig = {
 // Mongoose connection
 mongoose
   .connect(connectionString, mongoConfig)
-  .then(() => colorLog("success", `✅ MongoDB Connected ✅`))
+  .then(
+    () =>
+      NODE_ENV === "development" &&
+      colorLog("success", `✅ MongoDB Connected ✅`)
+  )
   .catch((err) => colorLog("error", "Error connection to MongoDB", err));
