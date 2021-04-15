@@ -2,7 +2,7 @@ POST http://localhost:3001/api/users/
 Content-Type: application/json
 
 {
+    "name": "Carlos Sánchez Sánchez",
     "username": "sanchezcarlos",
-    "name": "Carlos Sánchez",
-    "passwordHash": "123456qwerty"
+    "password": "これは私のpass"
 }

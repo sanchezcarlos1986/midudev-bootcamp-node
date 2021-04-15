@@ -9,10 +9,26 @@ export const initialNotes = [
   { content: "nota 3 de 日本語", important: true, date: new Date() },
 ];
 
+export const initialUsers = [
+  {
+    name: "Carlos Sánchez",
+    username: "カルロス",
+    password: "1234",
+  },
+];
+
 export const getAllContentFromNotes = async () => {
   const response = await api.get("/api/notes");
   return {
     contents: response.body.map((note) => note.content),
+    response,
+  };
+};
+
+export const getAllUsers = async () => {
+  const response = await api.get("/api/users");
+  return {
+    usernames: response.body.map((user) => user.username),
     response,
   };
 };

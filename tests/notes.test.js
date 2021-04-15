@@ -21,7 +21,7 @@ describe("GET all notes", () => {
       .expect("Content-Type", /application\/json/);
   });
 
-  test("there are two notes", async () => {
+  test(`there are ${initialNotes.length} notes`, async () => {
     const { response } = await getAllContentFromNotes();
     expect(response.body).toHaveLength(initialNotes.length);
   });

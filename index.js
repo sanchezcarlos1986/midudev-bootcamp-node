@@ -5,8 +5,6 @@ import notFound from "~middlewares/notFound";
 import handleErrors from "~middlewares/handleErrors";
 import * as Sentry from "@sentry/node";
 import * as Tracing from "@sentry/tracing";
-
-// Routers
 import notesRouter from "~controllers/notes";
 import usersRouter from "~controllers/users";
 
@@ -14,6 +12,7 @@ const { NODE_ENV } = process.env;
 
 const app = express();
 
+// Sentry
 Sentry.init({
   dsn:
     "https://4e3fa8b247824e98acadf73d2cd5322f@o568893.ingest.sentry.io/5714260",
@@ -39,12 +38,11 @@ app.use(express.static("public"));
 
 app.get("/api", (_, response) => response.send("<h1>HOLA MUNDO</h1>"));
 
-// NOTES ROUTER
+// Routes
 app.use("/api/notes", notesRouter);
-
-// USERS ROUTER
 app.use("/api/users", usersRouter);
 
+// Middlewares
 app.use(Sentry.Handlers.errorHandler());
 app.use(notFound);
 app.use(handleErrors);
