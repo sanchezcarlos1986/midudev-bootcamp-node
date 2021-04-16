@@ -6,7 +6,10 @@ const router = express.Router();
 
 router.get("/", async (_, response) => {
   try {
-    const users = await User.find({}).populate("notes");
+    const users = await User.find({}).populate("notes", {
+      content: 1,
+      date: 1,
+    });
     response.json(users);
   } catch (err) {
     console.log({ err });

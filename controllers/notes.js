@@ -5,7 +5,10 @@ import User from "~models/User";
 const router = express.Router();
 
 router.get("/", async (_, response) => {
-  const notes = await Note.find({});
+  const notes = await Note.find({}).populate("user", {
+    username: 1,
+    name: 1,
+  });
   response.json(notes);
 });
 
