@@ -6,7 +6,7 @@ const router = express.Router();
 
 router.get("/", async (_, response) => {
   try {
-    const users = await User.find({});
+    const users = await User.find({}).populate("notes");
     response.json(users);
   } catch (err) {
     console.log({ err });
@@ -37,7 +37,6 @@ router.post("/", async (request, response, next) => {
     response.status(201).json(savedUser);
   } catch (err) {
     response.status(400).json(err);
-    // next(err);
   }
 });
 

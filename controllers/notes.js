@@ -1,5 +1,6 @@
 import express from "express";
 import Note from "~models/Note";
+import User from "~models/User";
 
 const router = express.Router();
 
@@ -24,22 +25,29 @@ router.get("/:id", (request, response, next) => {
 });
 
 router.post("/", async (request, response, next) => {
-  const note = request.body;
+  const { userId, content, important = false } = request.body;
 
-  if (!note || !note.content) {
+  const user = await User.findById(userId);
+
+  if (!content) {
     return response.status(400).json({
-      error: "note or note.content are missing",
+      error: "note.content is missing",
     });
   }
 
-  const newNote = new Note({
-    date: new Date(),
-    important: note.important || false,
-    content: note.content,
-  });
-
   try {
+    const newNote = new Note({
+      date: new Date(),
+      important: important || false,
+      content,
+      user: user._id,
+    });
     const savedNote = await newNote.save();
+
+    // Relacionamos la nota guardada con el userId enviado en el body
+    user.notes = user.notes.concat(savedNote._id);
+    user.save();
+
     response.status(201).json(savedNote);
   } catch (err) {
     next(err);
