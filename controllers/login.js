@@ -5,7 +5,7 @@ import jwt from "jsonwebtoken";
 
 const router = express.Router();
 
-router.post("/", async (request, response) => {
+router.post("/", async (request, response, next) => {
   const { username, password } = request.body;
   try {
     const user = await User.findOne({ username });
@@ -30,7 +30,7 @@ router.post("/", async (request, response) => {
       token,
     });
   } catch (error) {
-    console.log("error:", error);
+    next(error);
   }
 });
 

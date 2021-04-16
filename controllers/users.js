@@ -4,7 +4,7 @@ import User from "~models/User";
 
 const router = express.Router();
 
-router.get("/", async (_, response) => {
+router.get("/", async (_, response, next) => {
   try {
     const users = await User.find({}).populate("notes", {
       content: 1,
@@ -12,7 +12,7 @@ router.get("/", async (_, response) => {
     });
     response.json(users);
   } catch (err) {
-    console.log({ err });
+    next(err);
   }
 });
 

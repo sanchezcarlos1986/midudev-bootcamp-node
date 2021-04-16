@@ -1,6 +1,7 @@
 import express from "express";
 import Note from "~models/Note";
 import User from "~models/User";
+import jwt from "jsonwebtoken";
 
 const router = express.Router();
 
@@ -28,17 +29,33 @@ router.get("/:id", (request, response, next) => {
 });
 
 router.post("/", async (request, response, next) => {
-  const { userId, content, important = false } = request.body;
-
-  const user = await User.findById(userId);
-
-  if (!content) {
-    return response.status(400).json({
-      error: "note.content is missing",
-    });
-  }
+  const { content, important = false } = request.body;
+  let token = "";
 
   try {
+    const authorization = request.get("authorization");
+
+    if (authorization && authorization.toLowerCase().startsWith("bearer")) {
+      token = authorization.substring(7);
+    }
+
+    const decodedToken = jwt.verify(token, process.env.SECRET);
+
+    if (!token || !decodedToken?.id) {
+      response
+        .status(401)
+        .json({ error: "Missing Token or Unauthorized user" });
+    }
+
+    const { id: userId } = decodedToken;
+    const user = await User.findById(userId);
+
+    if (!content) {
+      return response.status(400).json({
+        error: "note.content is missing",
+      });
+    }
+
     const newNote = new Note({
       date: new Date(),
       important: important || false,
