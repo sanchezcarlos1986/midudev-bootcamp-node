@@ -6,6 +6,8 @@ const ERROR_HANDLERS = {
     response.status(400).send({ error: "id used is malformed" }),
   JsonWebTokenError: (response) =>
     response.status(401).json({ error: "Missing Token or Unauthorized user" }),
+  TokenExpirerError: (response) =>
+    response.status(401).json({ error: "Expired token" }),
   ValidationError: (response, error) =>
     response.status(409).json({ error: error.message }),
   defaultError: (response) => response.status(500).end(),

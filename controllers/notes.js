@@ -1,7 +1,7 @@
 import express from "express";
 import Note from "~models/Note";
 import User from "~models/User";
-import jwt from "jsonwebtoken";
+import userExtractor from "~middlewares/userExtractor";
 
 const router = express.Router();
 
@@ -28,26 +28,10 @@ router.get("/:id", (request, response, next) => {
   // this is like .catch(err => next(err))
 });
 
-router.post("/", async (request, response, next) => {
-  const { content, important = false } = request.body;
-  let token = "";
-
+router.post("/", userExtractor, async (request, response, next) => {
   try {
-    const authorization = request.get("authorization");
-
-    if (authorization && authorization.toLowerCase().startsWith("bearer")) {
-      token = authorization.substring(7);
-    }
-
-    const decodedToken = jwt.verify(token, process.env.SECRET);
-
-    if (!token || !decodedToken?.id) {
-      response
-        .status(401)
-        .json({ error: "Missing Token or Unauthorized user" });
-    }
-
-    const { id: userId } = decodedToken;
+    const { content, important = false } = request.body;
+    const { userId } = request;
     const user = await User.findById(userId);
 
     if (!content) {
