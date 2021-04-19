@@ -67,7 +67,7 @@ router.put("/:id", (request, response, next) => {
   };
 
   Note.findByIdAndUpdate(id, newNoteInfo, { new: true })
-    .then((result) => response.status(200).end())
+    .then((result) => response.status(200).json(result))
     .catch(next);
 });
 
