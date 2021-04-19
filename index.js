@@ -8,6 +8,7 @@ import * as Tracing from "@sentry/tracing";
 import notesRouter from "~controllers/notes";
 import usersRouter from "~controllers/users";
 import loginRouter from "~controllers/login";
+import testingRouter from "~controllers/testing";
 
 const { NODE_ENV } = process.env;
 
@@ -43,6 +44,7 @@ app.get("/api", (_, response) => response.send("<h1>HOLA MUNDO</h1>"));
 app.use("/api/notes", notesRouter);
 app.use("/api/users", usersRouter);
 app.use("/api/login", loginRouter);
+app.use("/api/testing", testingRouter);
 
 // Middlewares
 app.use(Sentry.Handlers.errorHandler());

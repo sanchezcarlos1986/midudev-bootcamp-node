@@ -61,8 +61,12 @@ router.post("/", userExtractor, async (request, response, next) => {
 router.put("/:id", (request, response, next) => {
   const { id } = request.params;
   const note = request.body;
+  const newNoteInfo = {
+    content: note.content,
+    important: note.important,
+  };
 
-  Note.findByIdAndUpdate(id, note)
+  Note.findByIdAndUpdate(id, newNoteInfo, { new: true })
     .then((result) => response.status(200).end())
     .catch(next);
 });
