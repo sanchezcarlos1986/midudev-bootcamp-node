@@ -51,10 +51,12 @@ app.use(handleErrors);
 
 const PORT = process.env.PORT;
 
-const server = app.listen(PORT, () => {
-  NODE_ENV === "development" &&
-    colorLog("info", `🔥 Node Server running on PORT ${PORT} 🔥`);
-});
+const server = app.listen(PORT, () =>
+  colorLog(
+    "info",
+    `🔥 Node Server running on PORT ${PORT} for "${NODE_ENV}" 🔥`
+  )
+);
 
 export { app, server };
 export default app;
